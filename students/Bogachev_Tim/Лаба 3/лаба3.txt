@@ -1,0 +1,60 @@
+создание:
+
+create table price_book
+(
+	id integer primary key,
+	fk_id_book integer,
+	name_book varchar(30),
+	price integer,
+	discount_price integer,
+	foreign key (fk_id_book) references books(id_book)
+);
+
+заполнение:
+
+insert into price_book values
+(1,1,'Война и мир',100, 0),
+(2,2,'Ревизор',200, 50),
+(3,3,'Отцы и дети',0, 0),
+(4,4,'Дубровский',400, 100),
+(5,5,'Мертвые души',250, 150);
+
+update 1 :
+update price_book
+set price = price + 100;
+select * from price_book
+
+update 2 :
+set name_book ='Пособие для музыкантов'
+where name_book = 'Ревизор';
+
+update 3 :
+update price_book
+set discount_price = discount_price + 20;
+select * from price_book
+
+Код создания book_libraru_1 и 2:
+
+create table book_library_1
+(
+	id integer primary key,
+	addres varchar(30),
+	shelf_number integer,
+	name_book varchar(30)
+);
+
+create table book_library_2
+(
+	id integer primary key,
+	addres varchar(30),
+	shelf_number integer,
+	name_book varchar(30)
+);
+
+заполнение book_library_1:
+
+insert into book_library_1 values
+(1,'Солнечный пр-д,2',1,'Война и мир'),
+(2,'Солнечный пр-д,2',2,'Дубровский'),
+(3,'Солнечный пр-д,2',4,'Ревизор'),
+(4,'Солнечный пр-д,2',8, 'Отцы и дети')
