@@ -1,0 +1,81 @@
+create table price_leck
+(
+	id integer,
+	id_lickp int,
+	name_leck varchar(30),
+	price integer
+);
+
+
+
+
+ALTER TABLE price_leck
+ADD CHECK (price > 100); 
+
+
+
+alter table price_leck
+add unique (name_leck)
+
+
+
+
+alter table price_leck add primary key (id);
+
+alter table otdelenie add primary key (id_otdel);
+
+alter table diagnoz add primary key (id_ill );
+
+alter table pacient add primary key (id_pacient );
+
+alter table lekar add primary key (id_lek );
+
+alter table dolzhn add primary key (id_dolzhn  );
+
+alter table doc add primary key (id_doc  );
+
+alter table proc add primary key (id_proc  );
+
+
+
+alter table diagnoz
+add foreign key (id_otdel ) references otdelenie(id_otdel);
+
+alter table pacient
+add foreign key (id_otdel) references otdelenie(id_otdel);
+
+alter table pacient
+add foreign key (id_ill)  references diagnoz(id_ill);
+
+alter table diagnoz_lekar
+add foreign key (fk_id_ill ) references diagnoz(id_ill);
+
+alter table diagnoz_lekar
+add foreign key (fk_id_lek)  references lekar(id_lek);
+
+alter table doc
+add foreign key (id_dolzhn)  references dolzhn(id_dolzhn) ;
+
+alter table doc
+add foreign key (id_otdel)  references otdelenie(id_otdel);
+
+alter table diagnoz_proc
+add foreign key (fk_id_proc)  references proc(id_proc);
+
+alter table diagnoz_proc add foreign key (fk_id_ill) references diagnoz(id_ill);
+
+
+
+alter table price_leck
+add data_of_creation varchar(30) null;
+
+
+
+
+alter table price_leck
+drop column id_lickp;
+
+
+
+drop table price_leck
+
