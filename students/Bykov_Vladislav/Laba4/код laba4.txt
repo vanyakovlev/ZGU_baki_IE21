@@ -1,0 +1,181 @@
+a)
+SELECT * FROM payments WHERE amount > 4000; 
+SELECT * FROM payments WHERE amount < 300; 
+SELECT * FROM feedback WHERE stars = 2; 
+SELECT * FROM payments WHERE amount BETWEEN 50 AND 190;
+
+b)
+SELECT * FROM clients WHERE last_name LIKE 'N%'; 
+SELECT * FROM feedback WHERE stars IN (5); 
+
+c) 
+SELECT SUM(amount) AS "Выручка за день" FROM payments; 
+
+d) 
+SELECT * FROM clients, feedback WHERE feedback.client_id = clients.client_id; 
+
+e) 
+SELECT AVG(stars) FROM feedback; 
+SELECT SUM(amount) FROM payments; 
+SELECT COUNT(*) FROM drivers; 
+SELECT MIN(amount) FROM payments; 
+SELECT MAX(amount) FROM payments; 
+
+f) 
+ALTER TABLE drivers ADD COLUMN age int;
+UPDATE drivers
+SET age = 23 WHERE driver_id = '1';
+UPDATE drivers
+SET age = 31 WHERE driver_id = '2';
+UPDATE drivers
+SET age = 50 WHERE driver_id = '3';
+
+SELECT first_name, last_name 
+FROM drivers
+WHERE age > 30
+GROUP BY first_name, last_name; 
+
+g)  
+SELECT * FROM payments ORDER BY amount ASC; 
+
+h) 
+CREATE TABLE business_drivers
+(
+	driver_id int PRIMARY KEY,
+	first_name character varying(30)NOT NULL,
+	last_name character varying(30)NOT NULL,
+	phone character varying(20) NOT NULL,
+	CONSTRAINT business_driver_phone UNIQUE (phone)
+);
+ALTER TABLE business_drivers RENAME COLUMN driver_id TO business_driver_id;
+ALTER TABLE cars ADD COLUMN business_driver_id int;
+ALTER TABLE cars ADD FOREIGN KEY (business_driver_id) REFERENCES business_drivers(business_driver_id);
+INSERT INTO business_drivers
+VALUES
+('4','Bob','Willson','+19132221301'),
+('5','Tony','Montana','+19132221302'),
+('6','Vito','Scaletta','+19132221303');
+INSERT INTO cars (car_id, model, business_driver_id)
+VALUES
+('4','Bentley Continental',4),
+('5','Rolls-Royce Cullinan',5),
+('6','Mercedes-Benz Maybach GLS 600',4),
+('7','Велосипед четырехколесный SPORT',4),
+('8','AUDI S5',6),
+('9','Porsche 911',6);
+
+SELECT first_name,last_name, (
+	SELECT COUNT(*) FROM trips WHERE client_id = clients.client_id	
+) 
+AS "Кол-во поездок" FROM clients;
+
+SELECT first_name, last_name, age 
+FROM drivers
+WHERE age > (
+	SELECT AVG(age) FROM drivers
+); 
+
+SELECT * FROM clients
+WHERE client_id IN (
+	SELECT payment_id FROM feedback WHERE stars < 5
+); 
+
+i) 
+ALTER TABLE clients ADD COLUMN age int;
+UPDATE clients
+SET age = 29 WHERE client_id = '1';
+UPDATE clients
+SET age = 72 WHERE client_id = '2';
+UPDATE clients
+SET age = 19 WHERE client_id = '3';
+ALTER TABLE business_drivers ADD COLUMN age int;
+UPDATE business_drivers
+SET age = 31 WHERE driver_id = '4';
+UPDATE business_drivers
+SET age = 65 WHERE driver_id = '5';
+UPDATE business_drivers
+SET age = 23 WHERE driver_id = '6';
+
+SELECT first_name, last_name, age 
+FROM drivers 
+WHERE age > 40
+UNION
+SELECT first_name, last_name, age
+FROM business_drivers
+WHERE age > 40 
+
+j)
+SELECT age 
+FROM drivers 
+INTERSECT
+SELECT age
+FROM business_drivers 
+
+k) 
+SELECT first_name, last_name, age
+FROM drivers 
+EXCEPT
+SELECT first_name, last_name, age
+FROM business_drivers 
+
+l) 
+SELECT first_name, last_name, age,
+CASE
+    WHEN age >= 60 THEN 'пожилой водитель'
+    WHEN age >= 35 AND age <= 59 THEN 'водитель среднего возраста'
+    WHEN age >= 18 AND age <= 34 THEN 'молодой водитель'
+END AS "status"
+FROM drivers; 
+
+m) 
+SELECT *
+FROM drivers
+INNER JOIN business_drivers ON drivers.age = business_drivers.age; 
+
+SELECT *
+FROM drivers
+LEFT JOIN business_drivers ON drivers.age = business_drivers.age; - вернет все строки из таблицы "drivers", а также соответствующие строки из таблицы "business_drivers", при этом если нет соответствующей строки в таблице "business_drivers", то значения возвращаются как NULL.
+
+SELECT *
+FROM drivers
+RIGHT JOIN business_drivers ON drivers.age = business_drivers.age;
+
+SELECT *
+FROM drivers
+FULL OUTER JOIN business_drivers ON drivers.age = business_drivers.age; - вернет все строки из таблицы "drivers" и все строки из таблицы "business_drivers", при этом если нет соответствующей строки в одной из таблиц, то значения возвращаются как NULL.
+
+SELECT *
+FROM drivers
+CROSS JOIN clients; 
+
+n) 
+CREATE TABLE taxi_structure
+(
+	structure_id int PRIMARY KEY,
+	employee_name character varying(50) NOT NULL,
+	manager int REFERENCES taxi_structure
+);
+INSERT INTO taxi_structure
+VALUES
+(1, 'Steve Jobs', null),
+(2, 'Bob', 1),
+(3, 'John', 1),
+(4, 'Ryan Gosling', 2),
+(5, 'Connor McGregor', 4),
+(6, 'Will Smith', 7),
+(7, 'Big Bob', 4),
+(8, 'Lil Bob', 7),
+(9, 'Chief Keef', 6),
+(10, 'Vodila', 2);
+
+WITH RECURSIVE managers AS (
+    SELECT structure_id, employee_name, manager
+    FROM taxi_structure
+    WHERE employee_name = 'Chief Keef'
+    UNION ALL
+    SELECT i.structure_id, i.employee_name, i.manager
+    FROM taxi_structure AS i
+             INNER JOIN managers AS e ON i.structure_id = e.manager
+)
+SELECT structure_id, employee_name, manager
+FROM managers; 
