@@ -1,0 +1,55 @@
+create table otdelenie
+(
+	id_otdel int ,
+	nameotdel varchar
+);
+create table diagnoz
+(
+	id_ill int ,
+	name varchar,
+	id_otdel int);
+create table pacient(
+	id_pacient int,
+	id_ill int ,
+	id_otdel int,
+	polis int,
+	fio varchar,
+	medcard int,
+	dat date
+);
+create table lekar(
+	id_lek int ,
+	namelec varchar,
+	kol_v_den int
+);
+create table diagnoz_lekar
+(
+	fk_id_ill int,
+	fk_id_lek int,
+	primary key ( fk_id_ill, fk_id_lek)
+);
+create table dolzhn
+(
+	id_dolzhn int,
+	nazvanie varchar
+);
+create table doc
+(
+	id_doc int ,
+	fio varchar,
+	id_dolzhn int,
+	id_otdel int 
+);
+create table proc(
+	id_proc int ,
+	nazvanie varchar
+);
+create table diagnoz_proc
+(
+	fk_id_proc int,
+	fk_id_ill int ,
+	primary key ( fk_id_ill, fk_id_proc)
+);
+
+
+
