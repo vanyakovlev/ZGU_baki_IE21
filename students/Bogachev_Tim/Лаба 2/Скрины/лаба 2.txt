@@ -1,0 +1,26 @@
+create table price_book
+(
+	id integer,
+	id_book integer,
+	name_book varchar(30),
+	price integer,
+	discount_price integer
+);
+
+insert into price_book values
+(1,1,'Война и мир',100, 0),
+(2,2,'Ревизор',200, 50),
+(3,3,'Отцы и дети',0, 0),
+(4,4,'Дубровский',400, 100),
+(5,5,'Мертвые души',250, 150);
+
+not null + default 
+
+alter table price_book
+drop column discount_price;
+alter table price_book
+add discount_price varchar(30) NOT NULL default 'неизвестно';
+
+unique
+alter table price_book
+add unique (name_book);
